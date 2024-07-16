@@ -45,6 +45,9 @@ public class StringCalculator {
             throw new IllegalArgumentException("Первый аргумент должен быть в кавычках");
         }
         str1 = str1.substring(1, str1.length() - 1);
+        if(str1.length() > 10){
+            throw new IllegalArgumentException("Длина строки не должна превышать 10 символов");
+        }
 
         if (!scanner.hasNext()) {
             scanner.close();
@@ -76,9 +79,12 @@ public class StringCalculator {
             strOrNum = str2Builder.toString().trim();
             if (!strOrNum.endsWith("\"")) {
                 scanner.close();
-                throw new IllegalArgumentException("Третий аргумент должен быть в кавычках");
+                throw new IllegalArgumentException("Неверный формат");
             }
             strOrNum = strOrNum.substring(1, strOrNum.length() - 1);
+            if (strOrNum.length() > 10){
+                throw new IllegalArgumentException("Длина строки не должна превышать 10 символов");
+            }
         } else {
             try {
                 int num = Integer.parseInt(strOrNum);
@@ -88,7 +94,7 @@ public class StringCalculator {
                 }
             } catch (NumberFormatException e) {
                 scanner.close();
-                throw new IllegalArgumentException("Третий аргумент должен быть в кавычках или числом");
+                throw new IllegalArgumentException("Аргумент должен быть в кавычках или числом");
             }
         }
 
