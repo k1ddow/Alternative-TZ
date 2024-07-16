@@ -17,6 +17,7 @@ public class StringCalculator {
             scanner.close();
         }
     }
+
     public static String calculate(String inputStr) throws Exception {
         Scanner scanner = new Scanner(inputStr);
         scanner.useDelimiter("\\s+");
@@ -25,6 +26,7 @@ public class StringCalculator {
             scanner.close();
             throw new IllegalArgumentException("Пустой ввод");
         }
+
         StringBuilder str1Builder = new StringBuilder();
 
         while (scanner.hasNext()) {
@@ -32,9 +34,12 @@ public class StringCalculator {
             str1Builder.append(part);
             if (part.endsWith("\"")) {
                 break;
+            } else {
+                str1Builder.append(" ");
             }
         }
-        String str1 = str1Builder.toString();
+
+        String str1 = str1Builder.toString().trim();
         if (!str1.startsWith("\"") || !str1.endsWith("\"")) {
             scanner.close();
             throw new IllegalArgumentException("Первый аргумент должен быть в кавычках");
@@ -45,6 +50,7 @@ public class StringCalculator {
             scanner.close();
             throw new IllegalArgumentException("Неверный формат ввода");
         }
+
         String operator = scanner.next();
         if (!operator.equals("+") && !operator.equals("-") && !operator.equals("*") && !operator.equals("/")) {
             scanner.close();
@@ -55,8 +61,25 @@ public class StringCalculator {
             scanner.close();
             throw new IllegalArgumentException("Неверный формат ввода");
         }
+
         String strOrNum = scanner.next();
-        if (!strOrNum.startsWith("\"") || !strOrNum.endsWith("\"")) {
+        if (strOrNum.startsWith("\"")) {
+            StringBuilder str2Builder = new StringBuilder();
+            str2Builder.append(strOrNum);
+            while (scanner.hasNext()) {
+                String part = scanner.next();
+                str2Builder.append(" ").append(part);
+                if (part.endsWith("\"")) {
+                    break;
+                }
+            }
+            strOrNum = str2Builder.toString().trim();
+            if (!strOrNum.endsWith("\"")) {
+                scanner.close();
+                throw new IllegalArgumentException("Третий аргумент должен быть в кавычках");
+            }
+            strOrNum = strOrNum.substring(1, strOrNum.length() - 1);
+        } else {
             try {
                 int num = Integer.parseInt(strOrNum);
                 if (num < 1 || num > 10) {
@@ -67,11 +90,11 @@ public class StringCalculator {
                 scanner.close();
                 throw new IllegalArgumentException("Третий аргумент должен быть в кавычках или числом");
             }
-        } else {
-            strOrNum = strOrNum.substring(1, strOrNum.length() - 1);
         }
+
         scanner.close();
         String result;
+
         switch (operator) {
             case "+":
                 result = str1 + strOrNum;
@@ -99,9 +122,11 @@ public class StringCalculator {
             default:
                 throw new IllegalArgumentException("Операция не поддерживается");
         }
+
         if (result.length() > 40) {
             result = result.substring(0, 40) + "...";
         }
+
         return "\"" + result + "\"";
     }
 }
